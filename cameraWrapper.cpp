@@ -42,10 +42,11 @@ class Singleton {
 	
 	Mat readFrame(VideoCapture c)
 	{
-		Mat frame;
+		Mat original, resized;
 	
-		c >> frame;
-		return frame;
+		c >> original;
+		resize( original, resized, Size(this->WIDTH, this->HEIGHT),0, 0, INTER_LINEAR );
+		return resized;
 	}
 
 	void closeCam( VideoCapture c)
@@ -59,36 +60,3 @@ class Singleton {
 
 
 Singleton* Singleton::_instance = 0;
-
-// Singleton* Singleton::Instance () {
-// if (_instance == 0) {
-// _instance = new Singleton;
-// }
-// return _instance;
-// }
-
-int main()
-{
-	Singleton *Sing = Sing->Instance();
-	VideoCapture c = Sing->openCam();
-	cout << c.isOpened() << endl;
- 	
- 	// Mat frame;
- 	// while(1){
- 	// c >> frame;
-
- 	// imshow("frame", frame);
- 	// if(waitKey(30) >= 0) break;
- 	// }
- 	//Sing->readFrame(c);
-	for(int i=0;i<10;i++)
-	{
-		//Sing->readFrame(c);
-		// frame = Sing->readFrame(c);
-		//cout << frame;
-		imshow("edges", Sing->readFrame(c));
-		if(waitKey(30) >= 0) break;
-	}
-	Sing->closeCam(c);
-	return 0;
-}
