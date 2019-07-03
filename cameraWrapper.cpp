@@ -11,12 +11,11 @@ class Singleton {
 		int CAM;
 		int HEIGHT;
 		int WIDTH;
-
-	//public:
-	//	static Singleton* Instance(int cam, int height, int width);
+		//namedWindow("edges",1);
+		//VideoCapture cap = VideoCapture();
 
 	protected:
-		Singleton(int c=0, int h=400, int w=400) {
+		Singleton(int c, int h, int w) {
 			this -> CAM = c;
 			this -> HEIGHT = h;
 			this -> WIDTH = w;
@@ -24,23 +23,35 @@ class Singleton {
 	
 
 	public:
-		static Singleton* Instance (int cam = 0, int height = 400, int width = 400) {
-			if (_instance == 0) {
+		static Singleton* Instance (int cam=0, int height=400, int width=400)
+		{
+			if (_instance == 0) 
 				_instance = new Singleton(cam, height, width);
-			}
-		return _instance;
+			return _instance;
+		}
+
+	VideoCapture openCam()
+	{
+		//cap = this->cap(0);
+		VideoCapture cap(0);
+		//VideoCapture cap = VideoCapture( this->CAM );
+		if(!cap.isOpened()) {
+		cout << "Not Working";return -1;}
+		else return cap;
 	}
-	int p(){
-		cout << getCam() << endl;
+	
+	Mat readFrame(VideoCapture c)
+	{
+		Mat frame;
+	
+		c >> frame;
+		return frame;
 	}
 
-	int getCam() {
-      return this -> HEIGHT;
-   }
-
-   // void setData(int data) {
-   //    this -> data = data;
-   // }
+	void closeCam( VideoCapture c)
+	{
+		c.release();
+	}
 	
 	
 };
@@ -58,11 +69,26 @@ Singleton* Singleton::_instance = 0;
 
 int main()
 {
-	Singleton *Sing = Sing->Instance(0, 1100, 400);
-	Singleton *Sing2 = Sing2->Instance(0, 400, 500); 
+	Singleton *Sing = Sing->Instance();
+	VideoCapture c = Sing->openCam();
+	cout << c.isOpened() << endl;
+ 	
+ 	// Mat frame;
+ 	// while(1){
+ 	// c >> frame;
 
-	Sing->p();
-	
-	Sing2->p();
+ 	// imshow("frame", frame);
+ 	// if(waitKey(30) >= 0) break;
+ 	// }
+ 	//Sing->readFrame(c);
+	for(int i=0;i<10;i++)
+	{
+		//Sing->readFrame(c);
+		// frame = Sing->readFrame(c);
+		//cout << frame;
+		imshow("edges", Sing->readFrame(c));
+		if(waitKey(30) >= 0) break;
+	}
+	Sing->closeCam(c);
 	return 0;
 }
